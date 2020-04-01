@@ -119,13 +119,25 @@ const intern_questions = [
     }
 
 ];
-const exit = async (employees) => {
+/* const exit = async (employees) => {
     render(employees);
     fs.writeFile("./output/team.html", html(employeeCards), function(err) {
         if(err) return console.log(err);
         console.log("team.html file successfully created!");
+    })emplyees
+    
+}; */
+
+
+function exit(employees){
+
+    
+    fs.writeFile("./output/team.html", render(employees), function(err) {
+        if(err) return console.log(err);
+        console.log("team.html file successfully created!");
     })
-};
+
+}
 function init(){
 inquirer 
    .prompt(questions)
@@ -135,15 +147,17 @@ inquirer
                 inquirer
                     .prompt(manager_questions)
                     .then(manager_answers => {
+                        const new_manager = new Manager(manager_answers.name, manager_answers.id, manager_answers.email, manager_answers.officeNumber)
                         manager_answers['role'] = answers.role;
-                        employees.push(manager_answers)
+                        employees.push(new_manager)
                         console.log(manager_answers);
                         if (manager_answers.confirm){
                             init()  
                         }   else {
                             console.log("done")
                             console.log(employees)
-                            render(emplyees)
+                            render(employees)
+                            exit(employees)
                         }
                     }); 
                 break;
@@ -153,8 +167,9 @@ inquirer
                 inquirer
                     .prompt(intern_questions)
                     .then(intern_answers => {
+                    const new_intern = new Intern(intern_answers.name, intern_answers.id, intern_answers.email, intern_answers.school)
                     intern_answers['role'] = answers.role;
-                    employees.push(intern_answers)    
+                    employees.push(new_intern)    
                     console.log(intern_answers);
                     if (intern_answers.confirm){
                         init()
@@ -162,6 +177,7 @@ inquirer
                         console.log("done")
                         console.log(employees)
                         render(employees)
+                        exit(employees)
                     }    
                     });
                 break;
@@ -171,15 +187,17 @@ inquirer
                 inquirer
                     .prompt(engineer_questions)
                     .then(engineer_answers => {
+                    const new_engineer = new Engineer(engineer_answers.name, engineer_answers.id, engineer_answers.email, engineer_answers.github)
                     engineer_answers['role'] = answers.role;
-                    employees.push(engineer_answers)    
+                    employees.push(new_engineer)    
                     console.log(engineer_answers);
                     if (engineer_answers.confirm){
                         init()
                     } else {
                         console.log("done")
                         console.log(employees)
-                        employees.render('output')
+                        render(employees)
+                        exit(employees)
                     }
                     });
                 break;
@@ -192,4 +210,5 @@ inquirer
 };
 init()
 console.log(employees)
+//exit()
 
